@@ -3,22 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Asistente FabLab USMP - Impresión 3D</title>
+    <title>Asistente FabLab - Impresión 3D</title>
     <style>
       :root {
-        --bg-start: #f5efe9;
-        --bg-end: #eadfce;
-        --panel: rgba(255, 250, 245, 0.9);
-        --panel-border: rgba(98, 24, 38, 0.12);
-        --text-main: #3a1d24;
-        --text-soft: #735a60;
-        --accent: #7a1f32;
-        --accent-deep: #5a1222;
-        --accent-soft: #f4dfc4;
-        --bot-bubble: #ffffff;
-        --user-bubble: linear-gradient(135deg, #7a1f32, #a72b40);
-        --shadow: 0 24px 60px rgba(58, 29, 36, 0.16);
-        --danger: #b91c1c;
+        --bg: #f3f4f6;
+        --panel: #ffffff;
+        --panel-border: #d7dce3;
+        --text-main: #1d2935;
+        --text-soft: #66717e;
+        --accent: #d66b1f;
+        --accent-deep: #8f4310;
+        --accent-soft: #fff1e6;
+        --bot-bubble: #f7f8fa;
+        --user-bubble: #d66b1f;
+        --shadow: 0 10px 30px rgba(15, 32, 42, 0.08);
+        --danger: #b42318;
       }
 
       * {
@@ -29,104 +28,259 @@
       body {
         margin: 0;
         min-height: 100%;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        font-family: "Trebuchet MS", "Segoe UI", sans-serif;
         color: var(--text-main);
         background:
-          radial-gradient(circle at top left, rgba(122, 31, 50, 0.18), transparent 24%),
-          radial-gradient(circle at bottom right, rgba(196, 154, 79, 0.22), transparent 18%),
-          linear-gradient(145deg, var(--bg-start), var(--bg-end));
+          radial-gradient(circle at top right, rgba(214, 107, 31, 0.09), transparent 18%),
+          linear-gradient(180deg, #fafafb 0%, var(--bg) 100%);
       }
 
       body {
         min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 24px;
+        padding: 32px 20px 120px;
       }
 
-      .shell {
-        width: min(100%, 1040px);
-        min-height: min(90vh, 860px);
+      .app-shell,
+      .hero-panel,
+      .info-card,
+      .chat-window {
+        border: 1px solid var(--panel-border);
+        background: var(--panel);
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+      }
+
+      .app-shell {
+        width: min(100%, 1120px);
+        margin: 0 auto;
         display: grid;
-        grid-template-columns: minmax(0, 1fr) 320px;
+        gap: 20px;
+      }
+
+      .hero-panel {
+        padding: 32px;
+        display: grid;
+        grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+        gap: 24px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .hero-panel::after {
+        content: "";
+        position: absolute;
+        inset: auto -60px -60px auto;
+        width: 220px;
+        height: 220px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(214, 107, 31, 0.14), transparent 68%);
+        pointer-events: none;
+      }
+
+      .hero-copy {
+        position: relative;
+        z-index: 1;
+      }
+
+      .hero-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: var(--accent-soft);
+        color: var(--accent-deep);
+        font-size: 0.82rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .hero-title {
+        margin: 18px 0 12px;
+        font-size: clamp(2rem, 4vw, 3.4rem);
+        line-height: 1.02;
+      }
+
+      .hero-text {
+        max-width: 60ch;
+        margin: 0 0 22px;
+        color: var(--text-soft);
+        font-size: 1rem;
+        line-height: 1.6;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .hero-button,
+      .hero-secondary {
+        border: 0;
+        border-radius: 12px;
+        padding: 13px 18px;
+        font: inherit;
+        cursor: pointer;
+      }
+
+      .hero-button {
+        background: var(--accent);
+        color: #ffffff;
+        font-weight: 700;
+      }
+
+      .hero-secondary {
+        background: #ffffff;
+        color: var(--text-main);
+        border: 1px solid var(--panel-border);
+        font-weight: 600;
+      }
+
+      .hero-metrics {
+        display: grid;
+        gap: 12px;
+        align-content: start;
+      }
+
+      .metric-card {
+        padding: 18px;
+        border-radius: 16px;
+        background: linear-gradient(180deg, #ffffff, #faf7f3);
+        border: 1px solid var(--panel-border);
+      }
+
+      .metric-card strong {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 1.25rem;
+      }
+
+      .metric-card span {
+        color: var(--text-soft);
+        font-size: 0.92rem;
+        line-height: 1.45;
+      }
+
+      .overview-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 18px;
       }
 
-      .chat-window,
-      .info-panel {
-        border: 1px solid var(--panel-border);
-        background: var(--panel);
-        backdrop-filter: blur(18px);
-        border-radius: 28px;
-        box-shadow: var(--shadow);
+      .chat-drawer {
+        position: fixed;
+        right: 24px;
+        bottom: 92px;
+        width: min(420px, calc(100vw - 28px));
+        z-index: 20;
+        transform: translateY(22px) scale(0.96);
+        opacity: 0;
+        pointer-events: none;
+        transition: transform 0.24s ease, opacity 0.24s ease;
+      }
+
+      .chat-drawer.is-open {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+        pointer-events: auto;
       }
 
       .chat-window {
         display: flex;
         flex-direction: column;
         overflow: hidden;
+        min-height: 70vh;
+        max-height: min(760px, calc(100vh - 140px));
       }
 
       .chat-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-        padding: 22px 24px;
-        border-bottom: 1px solid rgba(15, 23, 42, 0.08);
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(244, 223, 196, 0.82));
+        display: grid;
+        gap: 8px;
+        padding: 24px;
+        border-bottom: 1px solid var(--panel-border);
+        background: #fbfbfc;
       }
 
       .brand {
         display: flex;
         align-items: center;
-        gap: 14px;
+        gap: 12px;
       }
 
       .brand-badge {
-        width: 52px;
-        height: 52px;
-        border-radius: 18px;
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
         display: grid;
         place-items: center;
         font-weight: 700;
-        letter-spacing: 0.08em;
+        letter-spacing: 0.04em;
         color: #ffffff;
-        background: linear-gradient(145deg, var(--accent), #a72b40);
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        background: var(--accent);
       }
 
       .brand-copy h1 {
         margin: 0;
-        font-size: clamp(1.05rem, 2vw, 1.3rem);
+        font-size: 1.2rem;
       }
 
       .brand-copy p {
-        margin: 4px 0 0;
+        margin: 3px 0 0;
         color: var(--text-soft);
-        font-size: 0.95rem;
+        font-size: 0.92rem;
       }
 
-      .status {
+      .drawer-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 14px;
+      }
+
+      .drawer-close {
+        width: 38px;
+        height: 38px;
+        border: 0;
+        border-radius: 10px;
+        background: #fff4ec;
+        color: var(--accent-deep);
+        font-size: 1.2rem;
+        cursor: pointer;
+      }
+
+      .header-meta {
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        padding: 10px 14px;
+        flex-wrap: wrap;
+      }
+
+      .status,
+      .header-chip {
+        padding: 8px 12px;
         border-radius: 999px;
-        background: rgba(122, 31, 50, 0.1);
-        color: var(--accent-deep);
+        font-size: 0.84rem;
         font-weight: 600;
-        white-space: nowrap;
+      }
+
+      .status {
+        background: #eaf7ee;
+        color: #166534;
       }
 
       .status::before {
         content: "";
-        width: 10px;
-        height: 10px;
+        width: 8px;
+        height: 8px;
         border-radius: 50%;
         background: #10b981;
-        box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.12);
+      }
+
+      .header-chip {
+        background: var(--accent-soft);
+        color: var(--accent-deep);
       }
 
       .messages {
@@ -135,17 +289,13 @@
         padding: 24px;
         display: flex;
         flex-direction: column;
-        gap: 18px;
+        gap: 14px;
         scroll-behavior: smooth;
         background:
-          linear-gradient(180deg, rgba(255, 255, 255, 0.26), rgba(255, 255, 255, 0.05)),
-          repeating-linear-gradient(
-            135deg,
-            rgba(122, 31, 50, 0.03),
-            rgba(122, 31, 50, 0.03) 18px,
-            transparent 18px,
-            transparent 36px
-          );
+          linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(250, 250, 251, 0.98)),
+          linear-gradient(90deg, rgba(214, 107, 31, 0.03) 1px, transparent 1px),
+          linear-gradient(rgba(214, 107, 31, 0.03) 1px, transparent 1px);
+        background-size: auto, 24px 24px, 24px 24px;
       }
 
       .message-row {
@@ -164,22 +314,23 @@
       .message {
         max-width: min(78%, 540px);
         padding: 14px 16px;
-        border-radius: 22px;
+        border-radius: 14px;
         position: relative;
         line-height: 1.45;
-        font-size: 0.98rem;
-        box-shadow: 0 12px 24px rgba(22, 49, 63, 0.08);
+        font-size: 0.96rem;
+        box-shadow: 0 6px 18px rgba(15, 32, 42, 0.06);
       }
 
       .message.bot {
         background: var(--bot-bubble);
-        border-bottom-left-radius: 8px;
+        border: 1px solid #e2e5ea;
+        border-bottom-left-radius: 4px;
       }
 
       .message.user {
         color: #ffffff;
         background: var(--user-bubble);
-        border-bottom-right-radius: 8px;
+        border-bottom-right-radius: 4px;
       }
 
       .meta {
@@ -201,8 +352,8 @@
         align-items: center;
         gap: 8px;
         margin-top: 12px;
-        padding: 10px 12px;
-        border-radius: 16px;
+        padding: 8px 10px;
+        border-radius: 10px;
         font-size: 0.88rem;
         background: rgba(255, 255, 255, 0.16);
         border: 1px solid rgba(255, 255, 255, 0.25);
@@ -210,8 +361,8 @@
       }
 
       .message.bot .attachment-chip {
-        background: rgba(122, 31, 50, 0.08);
-        border-color: rgba(122, 31, 50, 0.12);
+        background: #ffffff;
+        border-color: #e2e5ea;
       }
 
       .typing {
@@ -229,7 +380,7 @@
         width: 8px;
         height: 8px;
         border-radius: 50%;
-        background: rgba(122, 31, 50, 0.65);
+        background: rgba(214, 107, 31, 0.65);
         animation: pulse 1.2s infinite ease-in-out;
       }
 
@@ -256,9 +407,9 @@
       }
 
       .composer {
-        padding: 20px 22px 22px;
-        border-top: 1px solid rgba(15, 23, 42, 0.08);
-        background: rgba(255, 255, 255, 0.85);
+        padding: 18px 20px 20px;
+        border-top: 1px solid var(--panel-border);
+        background: #fbfbfc;
       }
 
       .attachment-preview {
@@ -284,10 +435,9 @@
         align-items: center;
         gap: 12px;
         padding: 10px 12px;
-        border-radius: 22px;
+        border-radius: 12px;
         background: #ffffff;
-        border: 1px solid rgba(15, 23, 42, 0.08);
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+        border: 1px solid var(--panel-border);
       }
 
       .input-group input[type="text"] {
@@ -309,13 +459,13 @@
       }
 
       .icon-button {
-        width: 48px;
-        height: 48px;
-        border-radius: 16px;
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
         display: grid;
         place-items: center;
         color: var(--accent-deep);
-        background: rgba(122, 31, 50, 0.1);
+        background: var(--accent-soft);
       }
 
       .icon-button:hover,
@@ -326,20 +476,20 @@
       .icon-button:focus-visible,
       .send-button:focus-visible,
       .input-group input[type="text"]:focus-visible {
-        outline: 3px solid rgba(122, 31, 50, 0.18);
+        outline: 3px solid rgba(15, 94, 168, 0.18);
         outline-offset: 2px;
       }
 
       .send-button {
-        min-width: 120px;
-        height: 56px;
-        padding: 0 24px;
-        border-radius: 18px;
+        min-width: 112px;
+        height: 48px;
+        padding: 0 20px;
+        border-radius: 12px;
         color: #ffffff;
-        font-size: 0.98rem;
+        font-size: 0.95rem;
         font-weight: 600;
-        background: linear-gradient(135deg, var(--accent), #a72b40);
-        box-shadow: 0 14px 28px rgba(122, 31, 50, 0.22);
+        background: var(--accent);
+        box-shadow: none;
       }
 
       .send-button:disabled,
@@ -365,13 +515,15 @@
         padding: 24px;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
-        gap: 24px;
+        gap: 16px;
+        align-self: start;
+        position: sticky;
+        top: 20px;
       }
 
       .info-panel h2,
       .info-panel h3 {
-        margin: 0 0 12px;
+        margin: 0 0 10px;
       }
 
       .info-panel p,
@@ -383,9 +535,9 @@
 
       .info-card {
         padding: 18px;
-        border-radius: 22px;
-        background: rgba(255, 255, 255, 0.7);
-        border: 1px solid rgba(15, 23, 42, 0.06);
+        border-radius: 14px;
+        background: #ffffff;
+        border: 1px solid var(--panel-border);
       }
 
       .info-list {
@@ -398,40 +550,100 @@
       .tag-row {
         display: flex;
         flex-wrap: wrap;
-        gap: 10px;
+        gap: 8px;
       }
 
       .tag {
-        padding: 10px 14px;
+        padding: 8px 12px;
         border-radius: 999px;
-        background: rgba(122, 31, 50, 0.1);
+        background: var(--accent-soft);
         color: var(--accent-deep);
         font-weight: 600;
         font-size: 0.85rem;
+      }
+
+      .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .kpi {
+        padding: 14px;
+        border-radius: 12px;
+        background: #fff8f2;
+        border: 1px solid var(--panel-border);
+      }
+
+      .kpi strong {
+        display: block;
+        font-size: 1.15rem;
+        margin-bottom: 4px;
       }
 
       .error-text {
         color: var(--danger);
       }
 
-      @media (max-width: 960px) {
-        .shell {
-          grid-template-columns: 1fr;
-        }
+      .launcher {
+        position: fixed;
+        right: 24px;
+        bottom: 24px;
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        border: 0;
+        border-radius: 18px;
+        padding: 14px 18px;
+        background: #111827;
+        color: #ffffff;
+        box-shadow: 0 18px 36px rgba(17, 24, 39, 0.2);
+        cursor: pointer;
+        z-index: 30;
+      }
 
-        .info-panel {
-          order: -1;
+      .launcher-badge {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, var(--accent), #ef9a52);
+        font-weight: 700;
+      }
+
+      .launcher-copy {
+        text-align: left;
+      }
+
+      .launcher-copy strong,
+      .launcher-copy span {
+        display: block;
+      }
+
+      .launcher-copy strong {
+        font-size: 0.94rem;
+      }
+
+      .launcher-copy span {
+        font-size: 0.8rem;
+        opacity: 0.82;
+      }
+
+      @media (max-width: 960px) {
+        .hero-panel,
+        .overview-grid {
+          grid-template-columns: 1fr;
         }
       }
 
       @media (max-width: 720px) {
         body {
-          padding: 12px;
+          padding: 14px;
         }
 
-        .chat-header {
-          flex-direction: column;
-          align-items: flex-start;
+        .hero-panel {
+          padding: 22px;
         }
 
         .messages {
@@ -450,21 +662,104 @@
         .send-button {
           width: 100%;
         }
+
+        .kpi-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .chat-drawer {
+          right: 14px;
+          left: 14px;
+          width: auto;
+          bottom: 88px;
+        }
+
+        .launcher {
+          right: 14px;
+          left: 14px;
+          justify-content: center;
+        }
       }
     </style>
   </head>
   <body>
-    <main class="shell">
-      <section class="chat-window" aria-label="Ventana de chat del asistente FabLab USMP">
-        <header class="chat-header">
-          <div class="brand">
-            <div class="brand-badge" aria-hidden="true">3D</div>
-            <div class="brand-copy">
-              <h1>Asistente FabLab USMP - Impresión 3D</h1>
-              <p>Soporte conversacional para archivos, materiales y preparación de impresiones.</p>
-            </div>
+    <main class="app-shell">
+      <section class="hero-panel" aria-label="Presentación del asistente de impresión 3D">
+        <div class="hero-copy">
+          <span class="hero-eyebrow">FabLab USMP</span>
+          <h1 class="hero-title">Asistente para impresión 3D y revisión de archivos.</h1>
+          <p class="hero-text">
+            Resuelve dudas sobre materiales, compatibilidad de archivos, preparación previa y recepción de modelos.
+            El chat queda disponible bajo demanda para que la pantalla principal no arranque ocupada.
+          </p>
+          <div class="hero-actions">
+            <button id="hero-open-chat" class="hero-button" type="button">Abrir asistente</button>
+            <button class="hero-secondary" type="button" disabled>Recepción de modelos STL y OBJ</button>
           </div>
-          <div class="status" aria-label="Estado del asistente">En línea</div>
+        </div>
+
+        <div class="hero-metrics" aria-label="Resumen del servicio">
+          <article class="metric-card">
+            <strong>Modelos 3D</strong>
+            <span>Consultas rápidas sobre STL, OBJ, escalado y validación previa a impresión.</span>
+          </article>
+          <article class="metric-card">
+            <strong>Materiales</strong>
+            <span>Orientación inicial para PLA, ABS y recomendaciones según el tipo de pieza.</span>
+          </article>
+          <article class="metric-card">
+            <strong>Adjuntos</strong>
+            <span>El chat admite archivos para acompañar la consulta técnica del usuario.</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="overview-grid" aria-label="Bloques informativos del asistente">
+        <article class="info-card">
+          <h2>Qué hace</h2>
+          <p>
+            Atiende preguntas frecuentes del laboratorio y guía la preparación básica antes del envío del modelo.
+          </p>
+        </article>
+
+        <article class="info-card">
+          <h2>Consultas típicas</h2>
+          <ul class="info-list">
+            <li>¿Mi archivo está listo para imprimir?</li>
+            <li>¿Qué material conviene para esta pieza?</li>
+            <li>¿Necesita soportes o ajuste de escala?</li>
+          </ul>
+        </article>
+
+        <article class="info-card">
+          <h2>Archivos admitidos</h2>
+          <div class="tag-row" aria-label="Tipos de archivos permitidos">
+            <span class="tag">.STL</span>
+            <span class="tag">.OBJ</span>
+            <span class="tag">.PNG</span>
+            <span class="tag">.JPG</span>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <section id="chat-drawer" class="chat-drawer" aria-label="Ventana de chat del asistente FabLab">
+      <section class="chat-window">
+        <header class="chat-header">
+          <div class="drawer-top">
+            <div class="brand">
+              <div class="brand-badge" aria-hidden="true">3D</div>
+              <div class="brand-copy">
+                <h1>Asistente FabLab</h1>
+                <p>Consultas sobre impresión 3D, materiales y preparación del modelo.</p>
+              </div>
+            </div>
+            <button id="close-chat" class="drawer-close" type="button" aria-label="Cerrar chat">×</button>
+          </div>
+          <div class="header-meta">
+            <div class="status" aria-label="Estado del asistente">En línea</div>
+            <div class="header-chip">Respuesta guiada</div>
+          </div>
         </header>
 
         <div id="messages" class="messages" aria-live="polite" aria-label="Historial de mensajes"></div>
@@ -478,7 +773,7 @@
                 id="message-input"
                 name="message"
                 type="text"
-                placeholder="Escribe tu consulta sobre impresión 3D..."
+                placeholder="Consulta sobre tu archivo, material o tiempo estimado..."
                 autocomplete="off"
               />
               <input
@@ -504,36 +799,15 @@
           </div>
         </form>
       </section>
+    </section>
 
-      <aside class="info-panel" aria-label="Información adicional del asistente">
-        <section class="info-card">
-          <h2>Capacidades</h2>
-          <p>
-            Este asistente está pensado para orientar al usuario en el envío y validación de archivos de impresión 3D,
-            recomendaciones básicas de preparación y dudas frecuentes del FabLab.
-          </p>
-        </section>
-
-        <section class="info-card">
-          <h3>Archivos compatibles</h3>
-          <div class="tag-row" aria-label="Tipos de archivos permitidos">
-            <span class="tag">.STL</span>
-            <span class="tag">.OBJ</span>
-            <span class="tag">.PNG</span>
-            <span class="tag">.JPG</span>
-          </div>
-        </section>
-
-        <section class="info-card">
-          <h3>Buenas prácticas</h3>
-          <ul class="info-list">
-            <li>Adjunta una vista previa del modelo si necesitas revisión visual.</li>
-            <li>Describe material, escala o tolerancias si tu consulta es técnica.</li>
-            <li>Verifica que el archivo no supere el límite definido por tu backend Flask.</li>
-          </ul>
-        </section>
-      </aside>
-    </main>
+    <button id="chat-toggle" class="launcher" type="button" aria-controls="chat-drawer" aria-expanded="false">
+      <span class="launcher-badge" aria-hidden="true">3D</span>
+      <span class="launcher-copy">
+        <strong>Abrir chat</strong>
+        <span>Asistencia de impresión 3D</span>
+      </span>
+    </button>
 
     <script>
       const chatForm = document.getElementById("chat-form");
@@ -543,21 +817,34 @@
       const sendButton = document.getElementById("send-button");
       const messagesContainer = document.getElementById("messages");
       const attachmentPreview = document.getElementById("attachment-preview");
+      const chatDrawer = document.getElementById("chat-drawer");
+      const chatToggle = document.getElementById("chat-toggle");
+      const heroOpenChat = document.getElementById("hero-open-chat");
+      const closeChatButton = document.getElementById("close-chat");
 
       let typingIndicatorNode = null;
 
       const initialMessages = [
         {
           role: "bot",
-          text: "Hola, soy el asistente del FabLab USMP. Puedo ayudarte con consultas sobre impresión 3D, preparación de archivos y recepción de modelos.",
+          text: "Hola, soy el asistente del FabLab. Puedo ayudarte con archivos 3D, materiales de impresión y consultas básicas antes de enviar tu modelo.",
           timestamp: getCurrentTime(),
         },
       ];
 
       initialMessages.forEach((message) => addMessage(message));
 
+      chatToggle.addEventListener("click", toggleChatDrawer);
+      heroOpenChat.addEventListener("click", openChatDrawer);
+      closeChatButton.addEventListener("click", closeChatDrawer);
       attachButton.addEventListener("click", () => fileInput.click());
       fileInput.addEventListener("change", renderAttachmentPreview);
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          closeChatDrawer();
+        }
+      });
 
       chatForm.addEventListener("submit", async (event) => {
         event.preventDefault();
@@ -703,6 +990,28 @@
         fileInput.disabled = disabled;
         attachButton.disabled = disabled;
         sendButton.disabled = disabled;
+      }
+
+      function openChatDrawer() {
+        chatDrawer.classList.add("is-open");
+        chatToggle.setAttribute("aria-expanded", "true");
+        chatToggle.querySelector("strong").textContent = "Cerrar chat";
+        requestAnimationFrame(() => messageInput.focus());
+      }
+
+      function closeChatDrawer() {
+        chatDrawer.classList.remove("is-open");
+        chatToggle.setAttribute("aria-expanded", "false");
+        chatToggle.querySelector("strong").textContent = "Abrir chat";
+      }
+
+      function toggleChatDrawer() {
+        if (chatDrawer.classList.contains("is-open")) {
+          closeChatDrawer();
+          return;
+        }
+
+        openChatDrawer();
       }
 
       function renderAttachmentPreview() {

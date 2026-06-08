@@ -1,13 +1,16 @@
 import os
+from pathlib import Path
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
 from google.cloud import dialogflow_v2 as dialogflow
 
 
+BASE_DIR = Path(__file__).resolve().parent
+
 # Configura la ruta al archivo JSON de credenciales de Google Cloud.
 # Reemplaza este valor con la ruta real en tu entorno.
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "credencialesDialogFlow.json"
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = str(BASE_DIR / "credencialesDialogFlow.json")
 
 # Completa estos valores con tu configuracion de Dialogflow.
 PROJECT_ID = "impresi-n3d-chatbot-ggdo"
@@ -18,6 +21,11 @@ LANGUAGE_CODE = "es"
 # Inicializa la aplicacion Flask y habilita CORS para el frontend.
 app = Flask(__name__)
 CORS(app)
+
+
+@app.route("/")
+def home():
+    return send_from_directory(BASE_DIR, "index.html")
 
 
 @app.route("/chat", methods=["POST"])
@@ -62,4 +70,4 @@ def chat():
 
 if __name__ == "__main__":
     # Ejecuta el servidor Flask en modo debug sobre el puerto solicitado.
-    app.run(debug=True, port=5000)
+    app.run(debug=True, port=5000, use_reloader=False)
